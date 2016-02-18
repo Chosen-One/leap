@@ -29,11 +29,11 @@ public class circleClass {
 
 	public void executeClockWiseAction(Robot robot) {
 		robot.mouseWheel(getClockWiseAction());
-		try { Thread.sleep(50); } catch(Exception e) {}
+		try { Thread.sleep(70); } catch(Exception e) {}
 	}
 
 	public void executeAntiClockWiseAction(Robot robot) {
 		robot.mouseWheel(getAntiClockWiseAction());
-		try { Thread.sleep(50); } catch(Exception e) {}
+		try { Thread.sleep(70); } catch(Exception e) {}
 	}
 }
