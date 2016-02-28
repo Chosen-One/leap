@@ -1,27 +1,26 @@
 package MainPackage;
 
 import com.leapmotion.leap.*;
-import com.leapmotion.leap.Gesture.State;
 import com.leapmotion.leap.Gesture.Type;
 
 import java.awt.Dimension;
-import java.awt.FontFormatException;
 import java.awt.Robot;
-import java.awt.RenderingHints.Key;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
-import javax.security.auth.x500.X500Principal;
-import javax.sound.midi.ControllerEventListener;
 
 public class listenerClass extends Listener {
 	
 	public Robot robot;
-	public boolean emulateMouse = true;
+	public boolean emulateMouse = false;
 	private circleClass circle = new circleClass(1, -1);
 	private swipeClass swipe = new swipeClass(KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
 
 	public void onConnect(Controller controller) {
+		try {
+			init();
+		} catch (IOException e) {}
 		controller.setPolicy(Controller.PolicyFlag.POLICY_BACKGROUND_FRAMES);
 		controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
 		controller.enableGesture(Gesture.Type.TYPE_SWIPE);
@@ -51,7 +50,7 @@ public class listenerClass extends Listener {
 		}
 			
 		if(isHandFlipped(frame)) {
-			switchToMostRecentWindow(controller, robot);
+			switchToMostRecentWindow(robot);
 		}
 				
 		for(Gesture gesture : frame.gestures()) {
@@ -83,6 +82,11 @@ public class listenerClass extends Listener {
 		}
 	}
 	
+	private void init() throws IOException {
+		configClass config = new configClass();
+		emulateMouse = config.emulateMouse();
+	}
+	
 	private boolean isHandFlipped(Frame frame) {
 		if(frame.hands().get(0).palmNormal().getY() >= .95) {
 			return true;
@@ -90,7 +94,7 @@ public class listenerClass extends Listener {
 		return false;
 	}
 	
-	private void switchToMostRecentWindow(Controller controller, Robot robot) {
+	private void switchToMostRecentWindow(Robot robot) {
 		robot.keyPress(KeyEvent.VK_ALT);
 		robot.keyPress(KeyEvent.VK_TAB);
 		robot.delay(1000);

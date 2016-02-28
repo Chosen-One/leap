@@ -35,7 +35,7 @@ public class swipeClass {
 		robot.keyRelease(getSwipeRightAction());
 		robot.keyRelease(KeyEvent.VK_CONTROL);
 		robot.keyRelease(KeyEvent.VK_WINDOWS);
-		try { Thread.sleep(1000); } catch(Exception e) {}
+		try { Thread.sleep(2000); } catch(Exception e) {}
 	}
 	
 	public void Left(Robot robot) {
@@ -45,6 +45,6 @@ public class swipeClass {
 		robot.keyRelease(getSwipeLeftAction());
 		robot.keyRelease(KeyEvent.VK_CONTROL);
 		robot.keyRelease(KeyEvent.VK_WINDOWS);
-		try { Thread.sleep(1000); } catch(Exception e) {}
+		try { Thread.sleep(2000); } catch(Exception e) {}
 	}
 }
