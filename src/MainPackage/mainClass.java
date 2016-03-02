@@ -16,13 +16,16 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
 
-public class mainClass extends JFrame implements WindowListener{
+public class mainClass extends JFrame implements WindowListener {
 
 	private Controller controller = new Controller();
 	private listenerClass listener = new listenerClass();
 	private JPanel activeOption, activeOptionWindow;
-	private boolean mouseEmulation = true;
+	private configClass config = new configClass();
 		
 	/**
 	 * Launch the application.
@@ -46,7 +49,7 @@ public class mainClass extends JFrame implements WindowListener{
 		super("Leap Motion");
 		setVisible(true);
 		setSize(600, 500);
-		setResizable(true);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		controller.addListener(listener);
@@ -56,19 +59,29 @@ public class mainClass extends JFrame implements WindowListener{
 		
 		JPanel header = new JPanel();
 		header.setBackground(SystemColor.controlShadow);
-		header.setBounds(0, 0, 584, 71);
+		header.setBounds(0, 0, 594, 71);
 		getContentPane().add(header);
 		header.setLayout(null);
 		
+		JLabel lblSettings = new JLabel("Settings");
+		lblSettings.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		lblSettings.setBounds(60, 9, 97, 49);
+		header.add(lblSettings);
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon("C:\\Users\\bilas\\Documents\\Workspace\\leap\\icons\\diagram_v2_13 (2).png"));
+		label.setBounds(10, 9, 39, 49);
+		header.add(label);
+		
 		JPanel sideBar = new JPanel();
 		sideBar.setBackground(SystemColor.menu);
-		sideBar.setBounds(0, 63, 178, 398);
+		sideBar.setBounds(0, 63, 178, 408);
 		getContentPane().add(sideBar);
 		sideBar.setLayout(null);
 		
 		JPanel option1Window = new JPanel();
 		option1Window.setBackground(SystemColor.window);
-		option1Window.setBounds(169, 63, 415, 398);
+		option1Window.setBounds(169, 63, 425, 408);
 		getContentPane().add(option1Window);
 		option1Window.setLayout(null);
 		option1Window.setVisible(false);
@@ -98,20 +111,21 @@ public class mainClass extends JFrame implements WindowListener{
 		
 		JTextPane txtpnMoveYourMouse = new JTextPane();
 		txtpnMoveYourMouse.setEditable(false);
-		txtpnMoveYourMouse.setFont(new Font("Segoe UI Light", Font.PLAIN, 14));
+		txtpnMoveYourMouse.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		txtpnMoveYourMouse.setText("Move your mouse cursor on the screen using your index \r\nfinger. The Leap motion senseor tracks the coordinates \r\nof your finger and mirrors the movement using cursor \r\non your 2D screen.\r\n\r\n\t         \t\t");
 		txtpnMoveYourMouse.setBounds(27, 69, 378, 88);
 		option1Window.add(txtpnMoveYourMouse);
 		
 		JTextPane txtpnEnabledisableMouseEmulation = new JTextPane();
-		txtpnEnabledisableMouseEmulation.setFont(new Font("Segoe UI Light", Font.BOLD, 20));
+		txtpnEnabledisableMouseEmulation.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		txtpnEnabledisableMouseEmulation.setEditable(false);
 		txtpnEnabledisableMouseEmulation.setText("Enable/Disable Mouse Emulation");
 		txtpnEnabledisableMouseEmulation.setBounds(27, 24, 343, 34);
 		option1Window.add(txtpnEnabledisableMouseEmulation);
 		
 		JToggleButton tglbtnEnable = new JToggleButton("Disabled");
-		if(mouseEmulation) {
+		tglbtnEnable.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		if(config.emulateMouse()) {
 			setButtonEnabled(tglbtnEnable);
 		} else {
 			setButtonDisabled(tglbtnEnable);
@@ -151,6 +165,12 @@ public class mainClass extends JFrame implements WindowListener{
 		});
 		setActiveOption(option1);
 		sideBar.add(option1);
+		option1.setLayout(null);
+		
+		JLabel lblMouseEmulation = new JLabel("Mouse Emulation");
+		lblMouseEmulation.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		lblMouseEmulation.setBounds(44, 11, 96, 33);
+		option1.add(lblMouseEmulation);
 		
 		JPanel option2 = new JPanel();
 		option2.setBounds(0, 62, 178, 55);
@@ -173,6 +193,12 @@ public class mainClass extends JFrame implements WindowListener{
 			}
 		});
 		sideBar.add(option2);
+		option2.setLayout(null);
+		
+		JLabel lblCircleGesture = new JLabel("Scrolling");
+		lblCircleGesture.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		lblCircleGesture.setBounds(65, 11, 45, 33);
+		option2.add(lblCircleGesture);
 		
 		JPanel option3 = new JPanel();
 		option3.setBounds(0, 117, 178, 55);
@@ -195,6 +221,11 @@ public class mainClass extends JFrame implements WindowListener{
 			}
 		});
 		sideBar.add(option3);
+		option3.setLayout(null);
+		
+		JLabel lblMultitasking = new JLabel("Multi-tasking");
+		lblMultitasking.setBounds(58, 11, 60, 33);
+		option3.add(lblMultitasking);
 		
 		JPanel option4 = new JPanel();
 		option4.setBounds(0, 172, 178, 55);
@@ -217,6 +248,7 @@ public class mainClass extends JFrame implements WindowListener{
 			}
 		});
 		sideBar.add(option4);
+		option4.setLayout(null);
 	}
 
 	private void performActionIfActiveWindow(JPanel panel) {

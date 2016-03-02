@@ -16,6 +16,7 @@ public class listenerClass extends Listener {
 	public boolean emulateMouse = false;
 	private circleClass circle = new circleClass(1, -1);
 	private swipeClass swipe = new swipeClass(KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+	private nativeAccessClass nativeAccess = new nativeAccessClass();
 
 	public void onConnect(Controller controller) {
 		try {
@@ -48,9 +49,9 @@ public class listenerClass extends Listener {
 				}
 			}	
 		}
-			
+		
 		if(isHandFlipped(frame)) {
-			switchToMostRecentWindow(robot);
+			nativeAccess.goToNextWindow();
 		}
 				
 		for(Gesture gesture : frame.gestures()) {
@@ -93,16 +94,7 @@ public class listenerClass extends Listener {
 		}
 		return false;
 	}
-	
-	private void switchToMostRecentWindow(Robot robot) {
-		robot.keyPress(KeyEvent.VK_ALT);
-		robot.keyPress(KeyEvent.VK_TAB);
-		robot.delay(1000);
-		robot.keyRelease(KeyEvent.VK_TAB);
-		robot.keyRelease(KeyEvent.VK_ALT);
-
-	}
-	
+		
 	private boolean isCircleClockWise(CircleGesture circleGesture) {
 		if(circleGesture.pointable().direction().angleTo(circleGesture.normal()) <= Math.PI/2) {
 			return true;
