@@ -13,99 +13,74 @@ import java.io.IOException;
 public class listenerClass extends Listener {
 	
 	public Robot robot;
-	public boolean emulateMouse = false;
-	private circleClass circle = new circleClass(1, -1);
-	private swipeClass swipe = new swipeClass(KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
-	private nativeAccessClass nativeAccess = new nativeAccessClass();
+	private mouseEmulationClass mouseEmulation = new mouseEmulationClass();
+	private handFlipClass handFlip = new handFlipClass();
+	private circleClass circle = new circleClass();
+	private swipeClass swipe = new swipeClass();
 
 	public void onConnect(Controller controller) {
-		try {
-			init();
-		} catch (IOException e) {}
 		controller.setPolicy(Controller.PolicyFlag.POLICY_BACKGROUND_FRAMES);
 		controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
 		controller.enableGesture(Gesture.Type.TYPE_SWIPE);
-		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
-		controller.config().setFloat("Gesture.Swipe.MinVelocity", 2000f);
+		controller.config().setFloat("Gesture.Swipe.MinVelocity", 750f);
+		controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
+		controller.config().save();
 	}
 	
 	public void onFrame(Controller controller) {
 		
-		try { 
-			robot = new Robot();
-		} catch(Exception e) {}
+		try { robot = new Robot(); } catch(Exception e) {}
 		
 		Frame frame = controller.frame();
 
-		if(emulateMouse) {
-			InteractionBox interactionBox = frame.interactionBox();
-			for(Finger finger : frame.fingers()) {
-				if(finger.type() == Finger.Type.TYPE_INDEX) {
-					Vector fingerPostion = finger.stabilizedTipPosition();
-					Vector normalizedFingerPosition = interactionBox.normalizePoint(fingerPostion);
-					Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-					robot.mouseMove((int)(screenSize.width * normalizedFingerPosition.getX()),
-							(int)(screenSize.height - normalizedFingerPosition.getY() * screenSize.height));
-				}
-			}	
+		if(mouseEmulation.isEmulatingMouse()) {
+			mouseEmulation.emulateMouse(robot, frame);	
 		}
 		
-		if(isHandFlipped(frame)) {
-			nativeAccess.goToNextWindow();
+		if(!mouseEmulation.isGrabbed(frame) && mouseEmulation.mousePressed()) {
+			mouseEmulation.releaseMouse(robot);
+		}
+		
+		if(handFlip.isHandFlipped(frame)) {
+			handFlip.switchToNextWindow(robot);
+			try { 
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
 		}
 				
 		for(Gesture gesture : frame.gestures()) {
 			
-			if(gesture.type() == Type.TYPE_CIRCLE) {
-				CircleGesture circleGesture = new CircleGesture(gesture);
-				if(isCircleClockWise(circleGesture)) {
-					System.out.println("Swipe ClockWise Detected!");
-					circle.executeClockWiseAction(robot);
-				} else {
-					System.out.println("Swipe AntiClockWise Detected!");
-					circle.executeAntiClockWiseAction(robot);
-				}
-			}
-	
-			if(gesture.type() == Type.TYPE_SWIPE) {
-				SwipeGesture swipeGesture = new SwipeGesture(gesture);
-				if(isSwipeToTheRight(swipeGesture)) {			
-					swipe.Right(robot);					
-				} else {
-					swipe.Left(robot);
-				}
-			}
+			switch(gesture.type()) {
 			
-			if(gesture.type() == Type.TYPE_KEY_TAP) {
-				robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-				robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+				case TYPE_CIRCLE:
+					CircleGesture circleGesture = new CircleGesture(gesture);
+					if(circle.isCircleClockWise(circleGesture)) {
+						circle.executeClockWiseAction(robot);
+						try { Thread.sleep(70); } catch(Exception e) {}
+					} else {
+						circle.executeAntiClockWiseAction(robot);
+						try { Thread.sleep(70); } catch(Exception e) {}
+					}
+					break;
+				
+		
+				case TYPE_SWIPE:
+					SwipeGesture swipeGesture = new SwipeGesture(gesture);
+					if(swipe.isSwipeToTheRight(swipeGesture)) {			
+						swipe.swipeRight(robot);	
+						try { Thread.sleep(2500); } catch(Exception e) {}
+					} else {
+						swipe.swipeLeft(robot);
+						try { Thread.sleep(2500); } catch(Exception e) {}
+					}
+					break;
 			}
 		}
 	}
-	
-	private void init() throws IOException {
-		configClass config = new configClass();
-		emulateMouse = config.emulateMouse();
-	}
-	
-	private boolean isHandFlipped(Frame frame) {
-		if(frame.hands().get(0).palmNormal().getY() >= .95) {
-			return true;
-		}
-		return false;
-	}
-		
-	private boolean isCircleClockWise(CircleGesture circleGesture) {
-		if(circleGesture.pointable().direction().angleTo(circleGesture.normal()) <= Math.PI/2) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean isSwipeToTheRight(SwipeGesture swipeGesture) {
-		if(swipeGesture.direction().getX() > .1) {
-			return true;
-		}
-		return false;
+				
+	public void save(configClass config) {
+		mouseEmulation.update(config);
+		circle.update(config);
+		swipe.update(config);	
 	}
 }

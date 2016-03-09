@@ -3,13 +3,22 @@ package MainPackage;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 
+import com.leapmotion.leap.SwipeGesture;
+
 public class swipeClass {
 	
 	private int rightAction, leftAction;
+	public final int moveLeft = KeyEvent.VK_LEFT, 
+			moveRight = KeyEvent.VK_RIGHT;
 
-	public swipeClass(int rightAction, int leftAction) {
-		this.rightAction = rightAction;
-		this.leftAction = leftAction;
+	public swipeClass() {
+		if(new configClass().isSwipeDefault()) {
+			rightAction = moveLeft;
+			leftAction = moveRight;
+		} else {
+			rightAction = moveRight;
+			leftAction = moveLeft;
+		}
 	}
 
 	public int getSwipeRightAction() {
@@ -19,32 +28,39 @@ public class swipeClass {
 	public int getSwipeLeftAction() {
 		return leftAction;
 	}
-
-	public void setSwipeRightAction(int rightAction) {
-		this.rightAction = rightAction;
-	}
-
-	public void swipeLeftAction(int leftAction) {
-		this.leftAction = leftAction;
-	}
 	
-	public void Right(Robot robot) {
+	public boolean isSwipeToTheRight(SwipeGesture swipeGesture) {
+		if(swipeGesture.direction().getX() > .1) {
+			return true;
+		}
+		return false;
+	}
+
+	public void swipeRight(Robot robot) {
 		robot.keyPress(KeyEvent.VK_CONTROL);
 		robot.keyPress(KeyEvent.VK_WINDOWS);
 		robot.keyPress(getSwipeRightAction());
 		robot.keyRelease(getSwipeRightAction());
 		robot.keyRelease(KeyEvent.VK_CONTROL);
 		robot.keyRelease(KeyEvent.VK_WINDOWS);
-		try { Thread.sleep(2000); } catch(Exception e) {}
 	}
 	
-	public void Left(Robot robot) {
+	public void swipeLeft(Robot robot) {
 		robot.keyPress(KeyEvent.VK_CONTROL);
 		robot.keyPress(KeyEvent.VK_WINDOWS);					
 		robot.keyPress(getSwipeLeftAction());
 		robot.keyRelease(getSwipeLeftAction());
 		robot.keyRelease(KeyEvent.VK_CONTROL);
 		robot.keyRelease(KeyEvent.VK_WINDOWS);
-		try { Thread.sleep(2000); } catch(Exception e) {}
+	}
+	
+	public void update(configClass config) {
+		if(config.isSwipeDefault()) {
+			rightAction = moveLeft;
+			leftAction = moveRight;
+		} else {
+			rightAction = moveRight;
+			leftAction = moveLeft;
+		}
 	}
 }

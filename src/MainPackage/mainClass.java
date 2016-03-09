@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
 
+import com.leapmotion.leap.Config;
 import com.leapmotion.leap.Controller;
 
 import javax.swing.JFrame;
@@ -19,6 +20,9 @@ import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import java.awt.Color;
+import javax.swing.border.LineBorder;
 
 public class mainClass extends JFrame implements WindowListener {
 
@@ -26,6 +30,7 @@ public class mainClass extends JFrame implements WindowListener {
 	private listenerClass listener = new listenerClass();
 	private JPanel activeOption, activeOptionWindow;
 	private configClass config = new configClass();
+	private final String images = "C:\\Users\\bilas\\Documents\\Workspace\\leap\\images\\";
 		
 	/**
 	 * Launch the application.
@@ -42,13 +47,10 @@ public class mainClass extends JFrame implements WindowListener {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public mainClass() {
 		super("Leap Motion");
 		setVisible(true);
-		setSize(600, 500);
+		setSize(600, 700);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -57,8 +59,10 @@ public class mainClass extends JFrame implements WindowListener {
 		this.addWindowListener(this);
 		getContentPane().setLayout(null);
 		
+		//header------------------------------------------------
+		
 		JPanel header = new JPanel();
-		header.setBackground(SystemColor.controlShadow);
+		header.setBackground(Color.LIGHT_GRAY);
 		header.setBounds(0, 0, 594, 71);
 		getContentPane().add(header);
 		header.setLayout(null);
@@ -69,79 +73,77 @@ public class mainClass extends JFrame implements WindowListener {
 		header.add(lblSettings);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("C:\\Users\\bilas\\Documents\\Workspace\\leap\\icons\\diagram_v2_13 (2).png"));
+		label.setIcon(new ImageIcon(images+"1456957447_free-14.png"));
 		label.setBounds(10, 9, 39, 49);
 		header.add(label);
 		
+		//siderBar-----------------------------------------------
+		
 		JPanel sideBar = new JPanel();
 		sideBar.setBackground(SystemColor.menu);
-		sideBar.setBounds(0, 63, 178, 408);
+		sideBar.setBounds(0, 63, 178, 608);
 		getContentPane().add(sideBar);
 		sideBar.setLayout(null);
 		
+		//sideBar-option1All-------------------------------------
+		
 		JPanel option1Window = new JPanel();
 		option1Window.setBackground(SystemColor.window);
-		option1Window.setBounds(169, 63, 425, 408);
+		option1Window.setBounds(169, 63, 425, 608);
 		getContentPane().add(option1Window);
 		option1Window.setLayout(null);
 		option1Window.setVisible(false);
-		
-		JPanel option2Window = new JPanel();
-		option2Window.setBackground(SystemColor.window);
-		option2Window.setBounds(169, 63, 415, 398);
-		getContentPane().add(option2Window);
-		option2Window.setLayout(null);
-		option2Window.setVisible(false);
-		
-		JPanel option3Window = new JPanel();
-		option3Window.setBackground(SystemColor.window);
-		option3Window.setBounds(169, 63, 415, 398);
-		getContentPane().add(option3Window);
-		option3Window.setLayout(null);
-		option3Window.setVisible(false);
-		
-		JPanel option4Window = new JPanel();
-		option4Window.setBackground(SystemColor.window);
-		option4Window.setBounds(169, 63, 415, 398);
-		getContentPane().add(option4Window);
-		option4Window.setLayout(null);
-		option4Window.setVisible(false);
 		
 		setActiveOptionWindow(option1Window);
 		
 		JTextPane txtpnMoveYourMouse = new JTextPane();
 		txtpnMoveYourMouse.setEditable(false);
 		txtpnMoveYourMouse.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		txtpnMoveYourMouse.setText("Move your mouse cursor on the screen using your index \r\nfinger. The Leap motion senseor tracks the coordinates \r\nof your finger and mirrors the movement using cursor \r\non your 2D screen.\r\n\r\n\t         \t\t");
-		txtpnMoveYourMouse.setBounds(27, 69, 378, 88);
+		txtpnMoveYourMouse.setText("Move your mouse cursor on the screen using your index \r\nfinger. The Leap motion senseor tracks the coordinates \r\nof your finger and mirrors the movement using cursor \r\non your 2D screen.\r\n\r\nYou can also tap on the screen which is recognised when \r\nthe finger pokes on the screen and immediately returns to\r\nthe approximate original position.\r\n\r\n\t         \t\t");
+		txtpnMoveYourMouse.setBounds(29, 324, 378, 165);
 		option1Window.add(txtpnMoveYourMouse);
 		
 		JTextPane txtpnEnabledisableMouseEmulation = new JTextPane();
 		txtpnEnabledisableMouseEmulation.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		txtpnEnabledisableMouseEmulation.setEditable(false);
-		txtpnEnabledisableMouseEmulation.setText("Enable/Disable Mouse Emulation");
-		txtpnEnabledisableMouseEmulation.setBounds(27, 24, 343, 34);
+		txtpnEnabledisableMouseEmulation.setText("Enable/Disable mouse emulation");
+		txtpnEnabledisableMouseEmulation.setBounds(29, 510, 343, 34);
 		option1Window.add(txtpnEnabledisableMouseEmulation);
 		
-		JToggleButton tglbtnEnable = new JToggleButton("Disabled");
-		tglbtnEnable.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		if(config.emulateMouse()) {
-			setButtonEnabled(tglbtnEnable);
-		} else {
-			setButtonDisabled(tglbtnEnable);
-		}
-		tglbtnEnable.addChangeListener(new ChangeListener() {
+		JToggleButton mouseEmulationTgl = new JToggleButton("Disabled");
+		mouseEmulationTgl.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		if(config.isEmulatingMouse())
+			setButtonEnabled(mouseEmulationTgl);
+		else 
+			setButtonDisabled(mouseEmulationTgl);
+		mouseEmulationTgl.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				if(tglbtnEnable.isSelected()) {
-					setButtonEnabled(tglbtnEnable);
+				if(mouseEmulationTgl.isSelected()) {
+					setButtonEnabled(mouseEmulationTgl);
+					config.setMouseEmulation(true);
+					listener.save(config);
 				} else {
-					setButtonDisabled(tglbtnEnable);
+					setButtonDisabled(mouseEmulationTgl);
+					config.setMouseEmulation(false);
+					listener.save(config);
 				}
 			}
 		});
-		tglbtnEnable.setBounds(27, 179, 121, 23);
-		tglbtnEnable.setBorderPainted(false);
-		option1Window.add(tglbtnEnable);
+		mouseEmulationTgl.setBounds(29, 555, 121, 23);
+		mouseEmulationTgl.setBorderPainted(false);
+		option1Window.add(mouseEmulationTgl);
+		
+		JTextPane txtpnEmulateTheMouse = new JTextPane();
+		txtpnEmulateTheMouse.setEditable(false);
+		txtpnEmulateTheMouse.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		txtpnEmulateTheMouse.setText("Emulate the mouse with your finger");
+		txtpnEmulateTheMouse.setBounds(27, 29, 380, 40);
+		option1Window.add(txtpnEmulateTheMouse);
+		
+		JLabel screeenTapImage = new JLabel("");
+		screeenTapImage.setIcon(new ImageIcon("C:\\Users\\bilas\\Documents\\Workspace\\leap\\images\\Leap_Gesture_Tap2.png"));
+		screeenTapImage.setBounds(29, 80, 360, 240);
+		option1Window.add(screeenTapImage);
 		
 		JPanel option1 = new JPanel();
 		option1.setBounds(0, 8, 178, 55);
@@ -172,6 +174,63 @@ public class mainClass extends JFrame implements WindowListener {
 		lblMouseEmulation.setBounds(44, 11, 96, 33);
 		option1.add(lblMouseEmulation);
 		
+		//sideBar-option2All-------------------------------------
+		
+		JPanel option2Window = new JPanel();
+		option2Window.setBackground(SystemColor.window);
+		option2Window.setBounds(169, 63, 425, 608);
+		getContentPane().add(option2Window);
+		option2Window.setLayout(null);
+		
+		JTextPane txtpnChangeTheDirection = new JTextPane();
+		txtpnChangeTheDirection.setEditable(false);
+		txtpnChangeTheDirection.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		txtpnChangeTheDirection.setText("Change how you scroll");
+		txtpnChangeTheDirection.setBounds(25, 489, 341, 33);
+		option2Window.add(txtpnChangeTheDirection);
+		
+		JTextPane txtpnDefaultAClockwise = new JTextPane();
+		txtpnDefaultAClockwise.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		txtpnDefaultAClockwise.setText("Default: Scroll down with a clockwise circle gesture with a finger and scroll up with an anti-clockwise circle gesture. \r\n\r\nInverted: Scroll up with a clockwise circle gesture with a finger and scroll down with an anti-clockwise circle gesture. ");
+		txtpnDefaultAClockwise.setBounds(25, 318, 341, 160);
+		option2Window.add(txtpnDefaultAClockwise);
+		option2Window.setVisible(false);
+		
+		JToggleButton circleGestureTgl = new JToggleButton("Default");
+		circleGestureTgl.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		if(config.isCircleDefault())
+			setButtonDefault(circleGestureTgl);
+		else 
+			setButtonInverted(circleGestureTgl);
+		circleGestureTgl.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if(circleGestureTgl.isSelected()) {
+					setButtonDefault(circleGestureTgl);
+					config.setCircle(true);
+					listener.save(config);
+				} else {
+					setButtonInverted(circleGestureTgl);
+					config.setCircle(false);
+					listener.save(config);
+				}
+			}
+		});
+		circleGestureTgl.setBounds(25, 540, 121, 23);
+		circleGestureTgl.setBorderPainted(false);
+		option2Window.add(circleGestureTgl);
+		
+		JTextPane txtpnDrawACircle = new JTextPane();
+		txtpnDrawACircle.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		txtpnDrawACircle.setEditable(false);
+		txtpnDrawACircle.setText("Draw a circle with your finger");
+		txtpnDrawACircle.setBounds(25, 21, 345, 33);
+		option2Window.add(txtpnDrawACircle);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\bilas\\Documents\\Workspace\\leap\\images\\Leap_Gesture_Circle.png"));
+		lblNewLabel.setBounds(25, 65, 366, 242);
+		option2Window.add(lblNewLabel);
+		
 		JPanel option2 = new JPanel();
 		option2.setBounds(0, 62, 178, 55);
 		option2.addMouseListener(new MouseAdapter() {
@@ -195,10 +254,67 @@ public class mainClass extends JFrame implements WindowListener {
 		sideBar.add(option2);
 		option2.setLayout(null);
 		
-		JLabel lblCircleGesture = new JLabel("Scrolling");
+		JLabel lblCircleGesture = new JLabel("Circle Gesture");
 		lblCircleGesture.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		lblCircleGesture.setBounds(65, 11, 45, 33);
+		lblCircleGesture.setBounds(51, 11, 80, 33);
 		option2.add(lblCircleGesture);
+		
+		//sideBar-option3All-------------------------------------
+		
+		JPanel option3Window = new JPanel();
+		option3Window.setBackground(SystemColor.window);
+		option3Window.setBounds(169, 63, 425, 608);
+		getContentPane().add(option3Window);
+		option3Window.setLayout(null);
+		option3Window.setVisible(false);
+		
+		JToggleButton swipeGestureTgl = new JToggleButton("Default");
+		swipeGestureTgl.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		if(config.isSwipeDefault())
+			setButtonDefault(swipeGestureTgl);
+		else 
+			setButtonInverted(swipeGestureTgl);
+		swipeGestureTgl.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if(swipeGestureTgl.isSelected()) {
+					setButtonDefault(swipeGestureTgl);
+					config.setSwipe(true);
+					listener.save(config);
+				} else {
+					setButtonInverted(swipeGestureTgl);
+					config.setSwipe(false);
+					listener.save(config);
+				}
+			}
+		});
+		swipeGestureTgl.setBounds(25, 561, 121, 23);
+		swipeGestureTgl.setBorderPainted(false);
+		option3Window.add(swipeGestureTgl);
+		
+		JTextPane txtpnSwipeYourHand = new JTextPane();
+		txtpnSwipeYourHand.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		txtpnSwipeYourHand.setEditable(false);
+		txtpnSwipeYourHand.setText("Swipe your hand to change workspaces");
+		txtpnSwipeYourHand.setBounds(25, 26, 379, 37);
+		option3Window.add(txtpnSwipeYourHand);
+		
+		JLabel swipeImage = new JLabel("New label");
+		swipeImage.setIcon(new ImageIcon("C:\\Users\\bilas\\Documents\\Workspace\\leap\\images\\Leap_Gesture_Swipe.png"));
+		swipeImage.setBounds(25, 74, 360, 240);
+		option3Window.add(swipeImage);
+		
+		JTextPane txtpnDefaultSwipeTo = new JTextPane();
+		txtpnDefaultSwipeTo.setEditable(false);
+		txtpnDefaultSwipeTo.setText("Important: This feature only works on Windows 10.\r\n\r\nDefault: Swipe to the left to switch to the workspace on the right. Swipe to the right to switch to the workspace on the left.\r\n\r\nInverted: Default: Swipe to the right to switch to the workspace on the right. Swipe to the left to switch to the workspace on the left.");
+		txtpnDefaultSwipeTo.setBounds(25, 353, 360, 117);
+		option3Window.add(txtpnDefaultSwipeTo);
+		
+		JTextPane txtpnChangeTheSwipe = new JTextPane();
+		txtpnChangeTheSwipe.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		txtpnChangeTheSwipe.setEditable(false);
+		txtpnChangeTheSwipe.setText("Change the swipe action");
+		txtpnChangeTheSwipe.setBounds(25, 496, 352, 30);
+		option3Window.add(txtpnChangeTheSwipe);
 		
 		JPanel option3 = new JPanel();
 		option3.setBounds(0, 117, 178, 55);
@@ -223,32 +339,29 @@ public class mainClass extends JFrame implements WindowListener {
 		sideBar.add(option3);
 		option3.setLayout(null);
 		
-		JLabel lblMultitasking = new JLabel("Multi-tasking");
-		lblMultitasking.setBounds(58, 11, 60, 33);
+		JLabel lblMultitasking = new JLabel("Swipe Gesture");
+		lblMultitasking.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		lblMultitasking.setBounds(53, 11, 76, 33);
 		option3.add(lblMultitasking);
 		
-		JPanel option4 = new JPanel();
-		option4.setBounds(0, 172, 178, 55);
-		option4.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				option4.setBackground(SystemColor.scrollbar);
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				option4.setBackground(SystemColor.menu);
-				performActionIfActiveWindow(option4);
-			}
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				activeOption.setBackground(SystemColor.menu);
-				setActiveOption(option4);
-				activeOptionWindow.setVisible(false);
-				setActiveOptionWindow(option4Window);
-			}
-		});
-		sideBar.add(option4);
-		option4.setLayout(null);
+		//experimental-panel-------------------------------------
+		
+//		JPanel panel_1 = new JPanel();
+//		panel_1.setBackground(SystemColor.scrollbar);
+//		panel_1.setBounds(0, 363, 47, 45);
+//		sideBar.add(panel_1);
+//		panel_1.setLayout(null);
+//		
+//		JLabel label_1 = new JLabel("");
+//		label_1.setBounds(7, 6, 32, 32);
+//		panel_1.add(label_1);
+//		label_1.setIcon(new ImageIcon("C:\\Users\\bilas\\Documents\\Workspace\\leap\\icons\\1456964134_home.png"));
+//		
+//		JPanel panel = new JPanel();
+//		panel.setBackground(SystemColor.scrollbar);
+//		panel.setBounds(0, 363, 178, 45);
+//		sideBar.add(panel);
+//		panel.setLayout(null);
 	}
 
 	private void performActionIfActiveWindow(JPanel panel) {
@@ -279,22 +392,25 @@ public class mainClass extends JFrame implements WindowListener {
 		button.setText("Disabled");
 	}
 	
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	private void setButtonDefault(JToggleButton button) {
+		button.setSelected(true);
+		button.setBackground(SystemColor.activeCaption);
+		button.setText("Default");
+	}
+	
+	private void setButtonInverted(JToggleButton button) {
+		button.setSelected(false);
+		button.setBackground(SystemColor.scrollbar);
+		button.setText("Inverted");
+	}
 
 	@Override
 	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
 		controller.removeListener(listener);
-		System.out.println("Controller Removed!");
-		
 	}
 
 	@Override
