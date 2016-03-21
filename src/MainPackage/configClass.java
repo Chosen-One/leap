@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 public class configClass {
 	
-	private String configLocation = System.getProperty("user.dir")+"\\.config";
+	private String configLocation = "C:\\Users\\bilas\\Documents\\Workspace\\leap\\.config";//System.getProperty("user.dir")+"\\.config";
 	
 	public boolean isEmulatingMouse() {
 		try {
@@ -26,6 +26,7 @@ public class configClass {
 			lines.close();
 			return false;
 		} catch (IOException e) {
+			System.out.println("IO Error");
 			return false;
 		}
 	}

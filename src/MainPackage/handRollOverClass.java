@@ -5,9 +5,11 @@ import java.awt.event.KeyEvent;
 
 import com.leapmotion.leap.Frame;
 
-public class handFlipClass {
+public class handRollOverClass {
 	
-	public boolean isHandFlipped(Frame frame) {
+	private boolean altPressed = false;
+	
+	public boolean isHandRolledOver(Frame frame) {
 		if(frame.hands().get(0).palmNormal().getY() >= .95) {
 			return true;
 		}
@@ -15,12 +17,20 @@ public class handFlipClass {
 	}
 	
 	public void switchToNextWindow(Robot robot){
-		robot.keyPress(KeyEvent.VK_ALT);
+		if(!altPressed) {
+			robot.keyPress(KeyEvent.VK_ALT);
+			altPressed = true;
+		}
 		robot.keyPress(KeyEvent.VK_TAB);
 		robot.keyRelease(KeyEvent.VK_TAB);
-		try {
-			Thread.sleep(700);
-		} catch (InterruptedException e) {}
+	}
+	
+	public boolean altPressed() {
+		return altPressed;
+	}
+	
+	public void releaseAlt(Robot robot) {
 		robot.keyRelease(KeyEvent.VK_ALT);
+		altPressed = false;
 	}
 }

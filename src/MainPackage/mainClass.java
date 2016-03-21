@@ -67,15 +67,10 @@ public class mainClass extends JFrame implements WindowListener {
 		getContentPane().add(header);
 		header.setLayout(null);
 		
-		JLabel lblSettings = new JLabel("Settings");
+		JLabel lblSettings = new JLabel("Help & Settings");
 		lblSettings.setFont(new Font("Segoe UI", Font.BOLD, 20));
-		lblSettings.setBounds(60, 9, 97, 49);
+		lblSettings.setBounds(10, 11, 179, 49);
 		header.add(lblSettings);
-		
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(images+"1456957447_free-14.png"));
-		label.setBounds(10, 9, 39, 49);
-		header.add(label);
 		
 		//siderBar-----------------------------------------------
 		
@@ -304,6 +299,7 @@ public class mainClass extends JFrame implements WindowListener {
 		option3Window.add(swipeImage);
 		
 		JTextPane txtpnDefaultSwipeTo = new JTextPane();
+		txtpnDefaultSwipeTo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		txtpnDefaultSwipeTo.setEditable(false);
 		txtpnDefaultSwipeTo.setText("Important: This feature only works on Windows 10.\r\n\r\nDefault: Swipe to the left to switch to the workspace on the right. Swipe to the right to switch to the workspace on the left.\r\n\r\nInverted: Default: Swipe to the right to switch to the workspace on the right. Swipe to the left to switch to the workspace on the left.");
 		txtpnDefaultSwipeTo.setBounds(25, 353, 360, 117);
@@ -344,24 +340,56 @@ public class mainClass extends JFrame implements WindowListener {
 		lblMultitasking.setBounds(53, 11, 76, 33);
 		option3.add(lblMultitasking);
 		
-		//experimental-panel-------------------------------------
+		//sideBar-option4All-------------------------------------
 		
-//		JPanel panel_1 = new JPanel();
-//		panel_1.setBackground(SystemColor.scrollbar);
-//		panel_1.setBounds(0, 363, 47, 45);
-//		sideBar.add(panel_1);
-//		panel_1.setLayout(null);
-//		
-//		JLabel label_1 = new JLabel("");
-//		label_1.setBounds(7, 6, 32, 32);
-//		panel_1.add(label_1);
-//		label_1.setIcon(new ImageIcon("C:\\Users\\bilas\\Documents\\Workspace\\leap\\icons\\1456964134_home.png"));
-//		
-//		JPanel panel = new JPanel();
-//		panel.setBackground(SystemColor.scrollbar);
-//		panel.setBounds(0, 363, 178, 45);
-//		sideBar.add(panel);
-//		panel.setLayout(null);
+		JPanel option4Window = new JPanel();
+		option4Window.setBackground(SystemColor.window);
+		option4Window.setBounds(169, 63, 425, 608);
+		getContentPane().add(option4Window);
+		option4Window.setLayout(null);
+		
+		JTextPane txtpnChangeTheOrientation = new JTextPane();
+		txtpnChangeTheOrientation.setEditable(false);
+		txtpnChangeTheOrientation.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		txtpnChangeTheOrientation.setText("Roll over to your hand to Multitask\r\n\r\n");
+		txtpnChangeTheOrientation.setBounds(26, 38, 369, 38);
+		option4Window.add(txtpnChangeTheOrientation);
+		
+		JTextPane txtpnCompletelyRollOver = new JTextPane();
+		txtpnCompletelyRollOver.setEditable(false);
+		txtpnCompletelyRollOver.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		txtpnCompletelyRollOver.setText("Completely roll over your hand and remain in that \r\nposition to cycle through all the opened windows. \r\nTo select a desired window just roll over your hand \r\nback to original position.");
+		txtpnCompletelyRollOver.setBounds(26, 101, 351, 111);
+		option4Window.add(txtpnCompletelyRollOver);
+		option4Window.setVisible(false);
+		
+		JPanel option4 = new JPanel();
+		option4.setBounds(0, 172, 178, 55);
+		option4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				option4.setBackground(SystemColor.scrollbar);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				option4.setBackground(SystemColor.menu);
+				performActionIfActiveWindow(option4);
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				activeOption.setBackground(SystemColor.menu);
+				setActiveOption(option4);
+				activeOptionWindow.setVisible(false);
+				setActiveOptionWindow(option4Window);
+			}
+		});
+		sideBar.add(option4);
+		option4.setLayout(null);
+		
+		JLabel handRollOver = new JLabel("Multitasking");
+		handRollOver.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		handRollOver.setBounds(53, 10, 76, 33);
+		option4.add(handRollOver);
 	}
 
 	private void performActionIfActiveWindow(JPanel panel) {
