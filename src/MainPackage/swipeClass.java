@@ -11,8 +11,8 @@ public class swipeClass {
 	public final int moveLeft = KeyEvent.VK_LEFT, 
 			moveRight = KeyEvent.VK_RIGHT;
 
-	public swipeClass() {
-		if(new configClass().isSwipeDefault()) {
+	public swipeClass(configClass config) {
+		if(config.isSwipeDefault()) {
 			rightAction = moveLeft;
 			leftAction = moveRight;
 		} else {

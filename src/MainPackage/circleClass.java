@@ -9,8 +9,8 @@ public class circleClass {
 	private int clockWiseAction, antiClockWiseAction;
 	public final int scrollDown = 1, scrollUp = -1;
 
-	public circleClass() {
-		if(new configClass().isCircleDefault()) {
+	public circleClass(configClass config) {
+		if(config.isCircleDefault()) {
 			clockWiseAction = scrollDown;
 			antiClockWiseAction = scrollUp;
 		} else {
