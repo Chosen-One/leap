@@ -18,15 +18,16 @@ public class listenerClass extends Listener {
 	
 	public Robot robot;
 	private mouseEmulationClass mouseEmulation;
+	private handRollOverClass handRollOver;
 	private circleClass circle;
 	private swipeClass swipe;
-	private nativeAccessClass nativeAccess = new nativeAccessClass();
-	private handRollOverClass handRollOver = new handRollOverClass();
 
-	public listenerClass(configClass config) {
-		mouseEmulation = new mouseEmulationClass(config);
-		circle = new circleClass(config);
-		swipe = new swipeClass(config);
+	public listenerClass(mouseEmulationClass mouseEmulation,
+			handRollOverClass handRollOver, circleClass circle, swipeClass swipe) {
+		this.mouseEmulation = mouseEmulation;
+		this.handRollOver = handRollOver;
+		this.circle = circle;
+		this.swipe = swipe;
 	}
 	
 	public void onConnect(Controller controller) {
@@ -38,6 +39,9 @@ public class listenerClass extends Listener {
 		controller.config().setBool("avoid_poor_performance", true);
 		controller.config().setInt32("background_app_mode", 2);
 		controller.config().setFloat("Gesture.Swipe.MinVelocity", 100f);
+		controller.config().setFloat("Gesture.ScreenTap.MinForwardVelocity", 30.0f);
+		controller.config().setFloat("Gesture.ScreenTap.HistorySeconds", .5f);
+		controller.config().setFloat("Gesture.ScreenTap.MinDistance", 1.0f);
 		controller.config().save();
 	}
 	
@@ -61,14 +65,7 @@ public class listenerClass extends Listener {
 				handRollOver.releaseAlt(robot);
 			}
 		}
-		
-		if(frame.hands().get(0).grabStrength() == 1) {
-			try { Thread.sleep(1500); } catch (InterruptedException e) {}
-			if(frame.hands().get(0).grabStrength() == 1)
-				nativeAccess.minimizeCurrentWindow();
-			try { Thread.sleep(1000); } catch (InterruptedException e) {}
-		}
-				
+						
 		for(Gesture gesture : frame.gestures()) {
 			
 			switch(gesture.type()) {
@@ -92,8 +89,10 @@ public class listenerClass extends Listener {
 					if(swipeGesture.state() == State.STATE_STOP) {
 						if(swipe.isSwipeToTheRight(swipeGesture)) {			
 							swipe.swipeRight(robot);
+							try { Thread.sleep(1500); } catch(Exception e) {}
 						} else {
 							swipe.swipeLeft(robot);
+							try { Thread.sleep(1500); } catch(Exception e) {}
 						}
 					}
 					break;

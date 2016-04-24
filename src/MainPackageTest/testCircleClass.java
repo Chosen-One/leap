@@ -14,20 +14,24 @@ import MainPackage.configClass;
 
 import static org.mockito.Mockito.*;
 
+import java.awt.Robot;
+
 public class testCircleClass {
 	
-	private String configLocation =  "C:\\Users\\bilas\\Documents\\Workspace\\leap\\.testConfig";
+	private String configLocation = System.getProperty("user.dir")+"\\.testConfig";
 	public configClass config = new configClass(configLocation);
 	public circleClass circle = new circleClass(config);
 	public CircleGesture mockedCircleGesture;
 	public Pointable mockedPointable;
 	public Vector mockedVector;
+	public Robot mockedRobot;
 	
 	@Before
 	public void setup() {
 		mockedCircleGesture = mock(CircleGesture.class);
 		mockedPointable = mock(Pointable.class);
 		mockedVector = mock(Vector.class);
+		mockedRobot = mock(Robot.class);
 	}
 	
 	@Test
@@ -54,11 +58,22 @@ public class testCircleClass {
 	}
 	
 	@Test
+	public void testExecuteClockWiseAndAntiClockWiseAction() {
+		circle.executeClockWiseAction(mockedRobot);
+		verify(mockedRobot).mouseWheel(circle.getClockWiseAction());
+		
+		circle.executeAntiClockWiseAction(mockedRobot);
+		verify(mockedRobot).mouseWheel(circle.getAntiClockWiseAction());
+	}
+	
+	@Test
 	public void testUpdate() {
 		config.setCircle(false);
 		circle.update(config);
 		
 		assertEquals(-1, circle.getClockWiseAction());
-		assertEquals(1, circle.getAntiClockWiseAction());	
+		assertEquals(1, circle.getAntiClockWiseAction());
+		
+		config.setCircle(true);
 	}
 }

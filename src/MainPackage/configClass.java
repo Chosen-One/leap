@@ -30,7 +30,7 @@ public class configClass {
 			lines.close();
 			return false;
 		} catch (IOException e) {
-			return false;
+			return true;
 		}
 	}
 	
